@@ -15,8 +15,8 @@ from torch import autocast
 model_org = "runwayml"
 model_name = "stable-diffusion-v1-5"
 reps = 1 # currently only returns first image anyway, because again....lazy
-width = 1024
-height = 1024
+width = 256
+height = 256
 uncensored = True
 
 # check for CUDA GPU
