@@ -99,6 +99,7 @@ async def post_prompt(input: PromptInput):
     if not input and not input.prompt:
         raise HTTPException(status_code=400, detail="No prompt received")
     try:
+        print(f"generating image for '{input.prompt}'")
         files = await query_model(input.prompt, model)
         img = Image.open(files[0])
         byte_io = io.BytesIO()
