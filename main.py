@@ -1,14 +1,15 @@
 import io
 import os
-from typing import Optional
 import torch
+from time import time
+from typing import Optional
+from diffusers import StableDiffusionPipeline
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import Response
 from PIL import Image
-from torch import autocast
-from diffusers import StableDiffusionPipeline
-from time import time
+from pydantic import BaseModel
 from slugify import slugify
+from torch import autocast
 
 # If I wasn't lazy, these could be env vars
 model_org = "runwayml"
@@ -16,6 +17,7 @@ model_name = "stable-diffusion-v1-5"
 reps = 1
 width = 1024
 height = 1024
+uncensored = True
 
 # check for CUDA GPU
 if not torch.cuda.is_available():
@@ -44,12 +46,17 @@ if not os.path.exists(model_path):
 
 # load model into VRAM
 def load_model():
-    try:
+    if uncensored:
+        try:
+            m = StableDiffusionPipeline.from_pretrained(
+                model_path, safety_checker=None, variant="fp16", torch_dtype=torch.float16
+            )
+        except:
+            print("yeah yeah, dirty dirty...")
+    else: 
         m = StableDiffusionPipeline.from_pretrained(
-            model_path, safety_checker=None, variant="fp16", torch_dtype=torch.float16
-        )
-    except:
-        print("yeah yeah, dirty dirty...")
+                model_path, variant="fp16", torch_dtype=torch.float16
+            )
     m.to("cuda")
     m.enable_attention_slicing()
     print(m.device)
@@ -81,7 +88,7 @@ model = load_model()
 app = FastAPI()
 
 # input model
-class PromptInput:
+class PromptInput(BaseModel):
     prompt: str
 
 
