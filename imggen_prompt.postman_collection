@@ -1,0 +1,45 @@
+{
+	"info": {
+		"_postman_id": "4f06005f-3d6d-4c82-abb1-ec86b8f38391",
+		"name": "imggen_prompt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1447829"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8069/prompt",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"prompt\": \"pixelated, pop art, bear headshot\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8069/prompt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"prompt"
+					],
+					"query": [
+						{
+							"key": "prompt",
+							"value": "tacos",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

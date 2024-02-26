@@ -1,5 +1,6 @@
 import io
 import os
+import random
 import torch
 from time import time
 from diffusers import StableDiffusionPipeline
@@ -68,10 +69,11 @@ def load_model():
 async def query_model(prompt: str, m):
     files = []
     for i in range(reps):
+        seed = random.randint(0, 512)
         with autocast("cuda"):
             output = m(
                 prompt,
-                generator=torch.Generator("cuda").manual_seed(42),
+                generator=torch.Generator("cuda").manual_seed(seed),
                 num_inference_steps=50,  # diffusion iterations
                 guidance_scale=7.5,  # adherence to text, default 7.5
                 width=width,
