@@ -2,9 +2,8 @@ import io
 import os
 import torch
 from time import time
-from typing import Optional
 from diffusers import StableDiffusionPipeline
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import Response
 from PIL import Image
 from pydantic import BaseModel
@@ -12,9 +11,10 @@ from slugify import slugify
 from torch import autocast
 
 # If I wasn't lazy, these could be env vars
+# find models => https://huggingface.co/models
 model_org = "runwayml"
 model_name = "stable-diffusion-v1-5"
-reps = 1
+reps = 1 # currently only returns first image anyway, because again....lazy
 width = 1024
 height = 1024
 uncensored = True
@@ -52,7 +52,7 @@ def load_model():
                 model_path, safety_checker=None, variant="fp16", torch_dtype=torch.float16
             )
         except:
-            print("yeah yeah, dirty dirty...")
+            print("yeah yeah, dirty dirty, inappropriate models, call the pope chucklefuck...")
     else: 
         m = StableDiffusionPipeline.from_pretrained(
                 model_path, variant="fp16", torch_dtype=torch.float16
@@ -81,6 +81,7 @@ async def query_model(prompt: str, m):
         filename = f"images/{time()}_{slugify(prompt[:100])}.png"
         image.save(filename)
         files.append(filename)
+    torch.cuda.empty_cache()
     return files
 
 # setup model and fastapi

@@ -18,8 +18,8 @@
 ## Usage
 
 - post to `http://localhost:8069/prompt`
-  - with query string `?prompt={prompt}`
-  - or with body:
+  - with query string `?prompt={prompt}` or
+  - with body:
   ```json
   {
     "prompt": "",

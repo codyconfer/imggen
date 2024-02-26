@@ -13,6 +13,7 @@ RUN poetry config virtualenvs.create false
 
 # Copy Source
 WORKDIR /work
+RUN mkdir cache && mkdir images
 COPY pyproject.toml pyproject.toml
 COPY poetry.lock poetry.lock
 COPY main.py main.py
